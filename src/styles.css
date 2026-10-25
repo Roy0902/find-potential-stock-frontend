@@ -1,0 +1,279 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  color: #1b1b1b;
+  background: #f7f7f5;
+}
+
+body {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 3px solid #0b5cad;
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -3rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  background: #ffffff;
+  border: 1px solid #0b5cad;
+  border-radius: 4px;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+a {
+  color: #0b5cad;
+}
+
+.site-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.25rem;
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+}
+
+.site-name {
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+}
+
+.search {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex: 1;
+}
+
+.search label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.search input {
+  flex: 1;
+  min-width: 12rem;
+  padding: 0.4rem 0.6rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sidebar .sidebar-links {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.sidebar a {
+  display: block;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.sidebar a[aria-current='page'] {
+  font-weight: 700;
+  background: #e6eef7;
+}
+
+.menu-button {
+  display: none;
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.card a {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+.card-source {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.card-author {
+  font-weight: 600;
+}
+
+.card-excerpt {
+  margin: 0;
+}
+
+.card time {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.card-thread {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.state {
+  padding: 2rem 0;
+}
+
+.single {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+.thread-header a {
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.comment {
+  border-left: 3px solid #e0e0e0;
+  padding: 0.5rem 0.75rem;
+  margin: 0.75rem 0;
+  background: #fff;
+}
+
+.comment[aria-current='true'] {
+  border-left-color: #0b5cad;
+  background: #eef5fd;
+}
+
+.comment header {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.comment-body {
+  white-space: pre-wrap;
+}
+
+.comment-label {
+  font-style: italic;
+  color: #666;
+}
+
+.replies {
+  padding-left: 24px;
+  border-left: 1px dashed #ddd;
+}
+
+.dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: 20rem;
+  height: fit-content;
+  padding: 1.25rem;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.admin-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0 0.4rem;
+  border-radius: 4px;
+  background: #f0e0e0;
+  font-size: 0.8rem;
+}
+
+.login-form {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 20rem;
+}
+
+.site-footer {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border-top: 1px solid #ddd;
+  background: #fff;
+}
+
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-button {
+    display: inline-block;
+    margin: 0.75rem 1.25rem 0;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .sidebar.open {
+    display: block;
+  }
+
+  .replies {
+    padding-left: 0;
+  }
+
+  .comment {
+    padding: 0.5rem;
+  }
+}
