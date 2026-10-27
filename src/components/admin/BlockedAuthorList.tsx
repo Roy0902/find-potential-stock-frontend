@@ -14,7 +14,7 @@ export function BlockedAuthorList({
     <ul>
       {authors.map((entry) => (
         <li key={entry.id}>
-          <span>{formatAuthor(entry)}</span>{' '}
+          <span className="comment-author">{formatAuthor(entry)}</span>{' '}
           <button
             type="button"
             onClick={() => onUnblock(entry.id)}

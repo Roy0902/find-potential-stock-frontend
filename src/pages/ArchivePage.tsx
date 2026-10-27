@@ -37,10 +37,19 @@ export function ArchivePage() {
     setParams(nextParams);
   };
 
+  const activeForumName = forums.find((entry) => String(entry.id) === forum)?.name;
+  const total = data?.pagination.total;
+
   return (
     <>
       <Header initialQuery={q} activeForum={forum || undefined} />
-      <button type="button" className="menu-button" onClick={() => setMenuOpen((open) => !open)}>
+      <button
+        type="button"
+        className="menu-button"
+        aria-expanded={menuOpen}
+        aria-controls="forum-sidebar"
+        onClick={() => setMenuOpen((open) => !open)}
+      >
         Forums
       </button>
       <div className="layout">
@@ -52,6 +61,26 @@ export function ArchivePage() {
           onNavigate={() => setMenuOpen(false)}
         />
         <main id="main-content">
+          <header className="archive-intro">
+            <p className="eyebrow">Public archive</p>
+            <h1>{q ? 'Search results' : 'Comment archive'}</h1>
+            <p className="archive-subtitle">
+              {q
+                ? `Public forum comments matching \u201c${q}\u201d.`
+                : 'Search conversations about stocks from public forums, archived in one place.'}
+            </p>
+            <div className="archive-meta">
+              <span className="archive-count">
+                {total === undefined
+                  ? 'Loading comments'
+                  : `${total.toLocaleString('en-US')} comment${total === 1 ? '' : 's'}`}
+              </span>
+              {q ? <span className="filter-chip">Search: {q}</span> : null}
+              {activeForumName ? (
+                <span className="filter-chip">Forum: {activeForumName}</span>
+              ) : null}
+            </div>
+          </header>
           {error ? (
             <ErrorState onRetry={() => void reload()} />
           ) : !data ? (

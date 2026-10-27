@@ -14,7 +14,9 @@ export function Header({
     <Bar>
       <SiteName />
       <SearchBar initial={initialQuery} activeForum={activeForum} />
-      <Link to="/about">About</Link>
+      <nav className="site-nav" aria-label="Site">
+        <Link to="/about">About</Link>
+      </nav>
     </Bar>
   );
 }

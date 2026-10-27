@@ -16,14 +16,19 @@ export function ForumSidebar({
   onNavigate?: () => void;
 }) {
   return (
-    <nav aria-label="Forums" className={`sidebar${open ? ' open' : ''}`}>
+    <nav
+      id="forum-sidebar"
+      aria-label="Forums"
+      className={`sidebar${open ? ' open' : ''}`}
+    >
+      <p className="sidebar-title">Forums</p>
       <div className="sidebar-links">
         <Link
           to={searchPath(query)}
           aria-current={activeForum ? undefined : 'page'}
           onClick={onNavigate}
         >
-          All forums
+          <span>All forums</span>
         </Link>
         {forums.map((forum) => (
           <Link
@@ -32,7 +37,10 @@ export function ForumSidebar({
             aria-current={activeForum === String(forum.id) ? 'page' : undefined}
             onClick={onNavigate}
           >
-            {forum.name} {forum.commentCount}
+            <span className="sidebar-forum-label">
+              {forum.name}{' '}
+              <span className="sidebar-forum-count">{forum.commentCount}</span>
+            </span>
           </Link>
         ))}
       </div>

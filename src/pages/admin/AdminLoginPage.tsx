@@ -21,25 +21,28 @@ export function AdminLoginPage() {
   };
 
   return (
-    <PageShell bar="admin" mainClassName="single">
-      <h1>Owner sign in</h1>
-      <form onSubmit={submit} className="login-form">
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-        />
-        <button type="submit">Sign in</button>
-        {error ? <p role="alert">{error}</p> : null}
-      </form>
+    <PageShell bar="admin" mainClassName="single single--narrow">
+      <div className="auth-card">
+        <p className="eyebrow">Owner access</p>
+        <h1>Owner sign in</h1>
+        <form onSubmit={submit} className="login-form">
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+          />
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+          <button type="submit">Sign in</button>
+          {error ? <p role="alert">{error}</p> : null}
+        </form>
+      </div>
     </PageShell>
   );
 }

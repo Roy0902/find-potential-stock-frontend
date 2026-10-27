@@ -9,12 +9,17 @@ export function Pagination({
 }) {
   return (
     <div className="pagination">
-      <button type="button" onClick={() => onChange(page - 1)} disabled={page <= 1}>
-        Previous
-      </button>
-      <button type="button" onClick={() => onChange(page + 1)} disabled={page >= totalPages}>
-        Next
-      </button>
+      <p className="pagination-status" aria-live="polite">
+        Page {page} of {Math.max(totalPages, 1)}
+      </p>
+      <div className="pagination-actions">
+        <button type="button" onClick={() => onChange(page - 1)} disabled={page <= 1}>
+          Previous
+        </button>
+        <button type="button" onClick={() => onChange(page + 1)} disabled={page >= totalPages}>
+          Next
+        </button>
+      </div>
     </div>
   );
 }

@@ -9,6 +9,8 @@ export function ThreadComment({
   highlighted: number | null;
 }) {
   const labelled = node.parentMissing || node.replyTargetUnknown;
+  const initial = node.author.displayName.trim().slice(0, 1).toLocaleUpperCase() || '?';
+
   return (
     <article
       aria-label={formatAuthor(node.author)}
@@ -17,6 +19,9 @@ export function ThreadComment({
       className="comment"
     >
       <header>
+        <span className="avatar" aria-hidden="true">
+          {initial}
+        </span>
         <span className="comment-author">{formatAuthor(node.author)}</span>{' '}
         <time dateTime={node.postedAt}>{formatTime(node.postedAt)}</time>
       </header>

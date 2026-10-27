@@ -6,8 +6,13 @@ export function ActionLog({ actions }: { actions: AdminAction[] }) {
     <ul>
       {actions.map((action) => (
         <li key={action.id}>
-          <span>{action.action}</span> <span>{action.targetType}</span>{' '}
-          <span>{action.targetId}</span> <time>{formatTime(action.createdAt)}</time>
+          <span className="badge">{action.action}</span>
+          <span className="scrape-meta">
+            <span>
+              {action.targetType} #{action.targetId}
+            </span>
+            <time dateTime={action.createdAt}>{formatTime(action.createdAt)}</time>
+          </span>
         </li>
       ))}
     </ul>

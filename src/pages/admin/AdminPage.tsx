@@ -125,42 +125,51 @@ export function AdminPage() {
 
   return (
     <>
-      <PageShell bar="admin" mainClassName="single">
-        <h1>Admin</h1>
+      <PageShell bar="admin" mainClassName="admin-page">
+        <div className="admin-heading">
+          <p className="eyebrow">Owner tools</p>
+          <h1>Admin</h1>
+        </div>
         {actionError ? <p role="alert">{actionError}</p> : null}
 
         <AdminSection title="Comments">
         <form onSubmit={search} className="admin-search">
-          <label htmlFor="admin-q">Search comments</label>
-          <input
-            id="admin-q"
-            type="search"
-            value={query}
-            onChange={(event) => {
-              setQuery(event.target.value);
-              setPage(1);
-            }}
-          />
-          <label htmlFor="admin-author">Author</label>
-          <input
-            id="admin-author"
-            type="search"
-            value={author}
-            onChange={(event) => {
-              setAuthor(event.target.value);
-              setPage(1);
-            }}
-          />
-          <label htmlFor="admin-source">Source</label>
-          <input
-            id="admin-source"
-            type="search"
-            value={source}
-            onChange={(event) => {
-              setSource(event.target.value);
-              setPage(1);
-            }}
-          />
+          <div className="field">
+            <label htmlFor="admin-q">Search comments</label>
+            <input
+              id="admin-q"
+              type="search"
+              value={query}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setPage(1);
+              }}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="admin-author">Author</label>
+            <input
+              id="admin-author"
+              type="search"
+              value={author}
+              onChange={(event) => {
+                setAuthor(event.target.value);
+                setPage(1);
+              }}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="admin-source">Source</label>
+            <input
+              id="admin-source"
+              type="search"
+              value={source}
+              onChange={(event) => {
+                setSource(event.target.value);
+                setPage(1);
+              }}
+            />
+          </div>
           <button type="submit">Search</button>
         </form>
 
@@ -189,21 +198,23 @@ export function AdminPage() {
         <Pagination page={page} totalPages={totalPages} onChange={setPage} />
         </AdminSection>
 
-        <AdminSection title="Blocked authors">
-        <BlockedAuthorList
-          authors={blocked}
-          pendingAuthorId={pendingAuthorId}
-          onUnblock={(id) => void unblock(id)}
-        />
-        </AdminSection>
+        <div className="admin-grid">
+          <AdminSection title="Blocked authors">
+          <BlockedAuthorList
+            authors={blocked}
+            pendingAuthorId={pendingAuthorId}
+            onUnblock={(id) => void unblock(id)}
+          />
+          </AdminSection>
 
-        <AdminSection title="Action log">
-        <ActionLog actions={actions} />
-        </AdminSection>
+          <AdminSection title="Action log">
+          <ActionLog actions={actions} />
+          </AdminSection>
 
-        <AdminSection title="Collection status">
-        <ScrapeRunList runs={runs} />
-        </AdminSection>
+          <AdminSection title="Collection status">
+          <ScrapeRunList runs={runs} />
+          </AdminSection>
+        </div>
       </PageShell>
       {dialog ? (
         <ConfirmDialog

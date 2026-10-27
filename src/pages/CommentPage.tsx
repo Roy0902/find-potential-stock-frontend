@@ -13,26 +13,28 @@ export function CommentPage() {
 
   if (error) {
     return (
-      <main id="main-content" className="single">
+      <PageShell mainClassName="single single--narrow">
         <ErrorState onRetry={() => void reload()} />
-      </main>
+      </PageShell>
     );
   }
 
   if (missing) {
     return (
-      <main id="main-content" className="single">
-        <p>This comment is no longer available,</p>
-        {sourceUrl ? <a href={sourceUrl}>View original post</a> : null}
-      </main>
+      <PageShell mainClassName="single single--narrow">
+        <div className="state">
+          <p>This comment is no longer available,</p>
+          {sourceUrl ? <a href={sourceUrl}>View original post</a> : null}
+        </div>
+      </PageShell>
     );
   }
 
   if (!comment || !thread) {
     return (
-      <main id="main-content" className="single">
+      <PageShell mainClassName="single single--narrow">
         <LoadingState />
-      </main>
+      </PageShell>
     );
   }
 

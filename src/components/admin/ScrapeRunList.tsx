@@ -5,10 +5,13 @@ export function ScrapeRunList({ runs }: { runs: ScrapeRun[] }) {
     <ul>
       {runs.map((run) => (
         <li key={run.id}>
-          <span>{run.status}</span> <span>{run.mode}</span>{' '}
-          <span>
-            added {run.commentsAdded}, updated {run.commentsUpdated}, skipped{' '}
-            {run.commentsSkippedRestricted}
+          <span className={`badge badge--${run.status}`}>{run.status}</span>
+          <span className="scrape-meta">
+            <span>{run.mode}</span>
+            <span>
+              added {run.commentsAdded}, updated {run.commentsUpdated}, skipped{' '}
+              {run.commentsSkippedRestricted}
+            </span>
           </span>
         </li>
       ))}
