@@ -1,7 +1,7 @@
 # Frontend
 
-React 18 + Vite + TypeScript with Tailwind CSS and shadcn/ui-compatible components. Public comment
-archive, comment detail, about page, owner login and admin page.
+React 18 + React Router framework mode (SSR) + TypeScript with Tailwind CSS and shadcn/ui-compatible
+components. Public comment archive, comment detail, about page, owner login and admin page.
 
 Tailwind is configured in `tailwind.config.js` and `postcss.config.js`. Shared shadcn-style controls
 live in `src/components/ui/`; use `Button`, `Input`, and the `cn` helper for new UI. The global
@@ -21,7 +21,7 @@ the `find-potential-stock` git repository. The database tooling and Playwright s
 
 ```bash
 npm install
-npm run dev          # http://localhost:5173, /api proxied to :3000
+npm run dev          # http://localhost:5173, SSR enabled, /api proxied to :3000
 ```
 
 If the backend is not running, pages load but show "Something went wrong." with a Retry button.
@@ -30,15 +30,16 @@ If the backend is not running, pages load but show "Something went wrong." with 
 
 | Script | Purpose |
 | :-- | :-- |
-| `npm run dev` | Dev server on 5173 with `/api` proxied to `http://localhost:3000` |
-| `npm run build` | Type check (`tsc --noEmit`) and production build into `dist/` |
-| `npm run preview` | Serve the production build on 5173 |
+| `npm run dev` | SSR development server on 5173 with `/api` proxied to `http://localhost:3000` |
+| `npm run build` | Generate route types, type check, and build the SSR server/client bundles |
+| `npm run start` | Run the built SSR server |
 
 ## Environment
 
 | Variable | Default | Purpose |
 | :-- | :-- | :-- |
 | `VITE_API_URL` | empty | API base URL. Empty means same-origin `/api`, which the dev server proxies. Set it when the API is on another host. |
+| `API_PROXY_TARGET` | `http://localhost:3000` in development | Backend URL used by SSR loaders. Set this in the SSR runtime environment when the API is not reachable at that address. |
 
 The dev proxy target is `http://localhost:3000` in `vite.config.ts`.
 
@@ -57,9 +58,13 @@ The dev proxy target is `http://localhost:3000` in `vite.config.ts`.
 ## Project structure
 
 ```
+app/
+  root.tsx                SSR document and shared layout
+  routes.ts               route table
+  entry.client.tsx        browser hydration entry
+  entry.server.tsx        server rendering entry
+  routes/                 route loaders and page adapters
 src/
-  main.tsx                Vite entry
-  app/App.tsx             route table + skip link
   api/
     client.ts             fetch wrapper, ApiError, envelope unwrapping
     commentQueries.ts     listComments, getComment
@@ -73,7 +78,7 @@ src/
   types/                  common, comment, thread, forum, admin, index
   lib/                    format (author/time), urls (searchPath), constants
   locales/en.ts           displayed English copy and parameterized messages
-  hooks/                  useArchive, useThread, useAdminData
+  hooks/                  interactive admin data refresh
   components/
     ui/                  Tailwind/shadcn-style Button and Input primitives
     common/               StateMessage (base for empty/error panels)
@@ -134,5 +139,10 @@ The Playwright config starts both the backend (`../../find-potential-stock-backe
 
 ## Deployment
 
-`npm run build` produces static files in `dist/`. Serve them from any static host and point
-`VITE_API_URL` at the deployed API. The API must allow the site origin in `CORS_ORIGIN`.
+`npm run build` produces client assets and an SSR server bundle. Run `npm run start` on a Node.js
+host; set `PORT` when the default server port conflicts with the backend (for example, in
+PowerShell use `$env:PORT = "5173"` before starting). Production deployments must route browser `/api`
+requests to the backend with a same-origin
+reverse proxy, and set `API_PROXY_TARGET` in the SSR runtime so server loaders can reach the backend.
+Admin loaders forward only the incoming session cookie to the backend; do not forward it to other
+origins.

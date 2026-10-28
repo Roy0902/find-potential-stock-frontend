@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { CommentSummary } from '@/types';
 import { formatAuthor, formatTime } from '@/lib/format';
 

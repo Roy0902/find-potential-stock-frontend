@@ -1,8 +1,11 @@
 import type { BlockedAuthor } from '@/types';
 import { apiGet, apiSend } from '@/api/client';
 
-export async function listBlockedAuthors(): Promise<BlockedAuthor[]> {
-  const body = await apiGet<{ authors: BlockedAuthor[] }>('/api/admin/authors?blocked=true');
+export async function listBlockedAuthors(request?: Request): Promise<BlockedAuthor[]> {
+  const body = await apiGet<{ authors: BlockedAuthor[] }>(
+    '/api/admin/authors?blocked=true',
+    request,
+  );
   return body.authors;
 }
 

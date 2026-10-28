@@ -4,6 +4,8 @@ node_modules/
 .pnp.*
 
 # Build output
+build/
+.react-router/
 dist/
 dist-ssr/
 *.tsbuildinfo

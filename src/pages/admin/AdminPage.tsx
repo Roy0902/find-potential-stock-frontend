@@ -1,5 +1,5 @@
 import { useCallback, useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
   ApiError,
   blockAuthor,
@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAdminData } from '@/hooks/useAdminData';
 import type { AdminComment, PendingAction } from '@/types';
+import type { AdminData } from '@/hooks/useAdminData';
 import { en } from '@/locales/en';
 
 type Dialog =
@@ -26,7 +27,7 @@ type Dialog =
   | { kind: 'block'; authorId: number; commentId: number }
   | null;
 
-export function AdminPage() {
+export function AdminPage({ loaderData }: { loaderData: AdminData }) {
   const [query, setQuery] = useState('');
   const [author, setAuthor] = useState('');
   const [source, setSource] = useState('');
@@ -38,6 +39,7 @@ export function AdminPage() {
 
   const onUnauthorized = useCallback(() => navigate('/admin/login'), [navigate]);
   const { comments, blocked, actions, runs, totalPages, reload } = useAdminData({
+    initialData: loaderData,
     page,
     q: query,
     author,

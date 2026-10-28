@@ -68,8 +68,18 @@ async function read<T>(response: Response): Promise<T> {
   return body as T;
 }
 
-export async function apiGet<T>(path: string): Promise<T> {
-  const response = await fetch(`${base}${path}`, { credentials: 'include' });
+export async function apiGet<T>(path: string, request?: Request): Promise<T> {
+  const url = request
+    ? new URL(
+        path,
+        process.env.API_PROXY_TARGET || base || 'http://localhost:3000',
+      ).toString()
+    : `${base}${path}`;
+  const cookie = request?.headers.get('cookie');
+  const response = await fetch(url, {
+    credentials: request ? undefined : 'include',
+    headers: cookie ? { cookie } : undefined,
+  });
   return read<T>(response);
 }
 

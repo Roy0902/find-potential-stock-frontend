@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ApiError, login } from '@/api';
 import { PageShell } from '@/components/layout/PageShell';
 import { Button } from '@/components/ui/button';

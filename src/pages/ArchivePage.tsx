@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useRevalidator, useSearchParams } from 'react-router';
+import { useState } from 'react';
 import { EmptyState } from '@/components/comments/EmptyState';
 import { ErrorState } from '@/components/comments/ErrorState';
 import { LoadingState } from '@/components/comments/LoadingState';
@@ -9,28 +9,23 @@ import { ForumSidebar } from '@/components/forums/ForumSidebar';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
-import { useArchive } from '@/hooks/useArchive';
 import { en } from '@/locales/en';
+import type { CommentSummary, Forum, Paged } from '@/types';
 
-export function ArchivePage() {
+type ArchiveLoaderData = {
+  data: Paged<CommentSummary> | null;
+  forums: Forum[];
+  error: boolean;
+};
+
+export function ArchivePage({ loaderData }: { loaderData: ArchiveLoaderData }) {
   const [params, setParams] = useSearchParams();
+  const revalidator = useRevalidator();
   const q = params.get('q') ?? '';
   const forum = params.get('forum') ?? '';
-  const page = Math.max(Number(params.get('page') ?? '1') || 1, 1);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const clamp = useCallback(
-    (totalPages: number) => {
-      setParams((current) => {
-        const next = new URLSearchParams(current);
-        next.set('page', String(totalPages));
-        return next;
-      });
-    },
-    [setParams],
-  );
-
-  const { data, forums, error, reload } = useArchive({ page, q, forum, onClamp: clamp });
+  const { data, forums, error } = loaderData;
 
   const setPage = (next: number) => {
     const nextParams = new URLSearchParams(params);
@@ -95,7 +90,7 @@ export function ArchivePage() {
             </div>
           </header>
           {error ? (
-            <ErrorState onRetry={() => void reload()} />
+            <ErrorState onRetry={() => void revalidator.revalidate()} />
           ) : !data ? (
             <LoadingState />
           ) : data.pagination.total === 0 ? (

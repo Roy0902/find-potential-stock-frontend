@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { en } from '@/locales/en';
 
 export function Footer() {

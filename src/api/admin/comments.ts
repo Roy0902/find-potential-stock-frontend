@@ -16,12 +16,12 @@ export function listAdminComments({
   q,
   author,
   source,
-}: AdminCommentQuery): Promise<Paged<AdminComment>> {
+}: AdminCommentQuery, request?: Request): Promise<Paged<AdminComment>> {
   const query = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
   if (q) query.set('q', q);
   if (author) query.set('author', author);
   if (source) query.set('source', source);
-  return apiGet<Paged<AdminComment>>(`/api/admin/comments?${query.toString()}`);
+  return apiGet<Paged<AdminComment>>(`/api/admin/comments?${query.toString()}`, request);
 }
 
 export function setCommentHidden(

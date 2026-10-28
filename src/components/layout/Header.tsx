@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Bar } from './Bar';
 import { SiteName } from './SiteName';
 import { SearchBar } from '@/components/search/SearchBar';

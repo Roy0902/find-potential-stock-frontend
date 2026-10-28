@@ -5,11 +5,12 @@ import { apiGet } from './client';
 export function getThread(
   threadId: number | string,
   options: { commentId?: number | string; page?: number; pageSize?: number } = {},
+  request?: Request,
 ): Promise<ThreadPageData> {
   const query = new URLSearchParams({
     page: String(options.page ?? 1),
     pageSize: String(options.pageSize ?? THREAD_PAGE_SIZE),
   });
   if (options.commentId !== undefined) query.set('commentId', String(options.commentId));
-  return apiGet<ThreadPageData>(`/api/threads/${threadId}?${query.toString()}`);
+  return apiGet<ThreadPageData>(`/api/threads/${threadId}?${query.toString()}`, request);
 }

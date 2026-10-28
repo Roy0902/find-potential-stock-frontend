@@ -4,22 +4,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --port 5173",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview --port 5173"
+    "dev": "react-router dev --port 5173",
+    "build": "react-router typegen && tsc --noEmit && react-router build",
+    "start": "react-router-serve ./build/server/index.js"
   },
   "dependencies": {
+    "@react-router/dev": "^7.18.5",
+    "@react-router/serve": "^7.18.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.0",
+    "react-router": "^7.18.5",
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@types/node": "^26.6.5",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.6.2",
     "postcss": "^8.5.32",
     "tailwindcss": "^3.4.19",

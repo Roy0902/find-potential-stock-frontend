@@ -1,22 +1,48 @@
-import { useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useRevalidator } from 'react-router';
+import { getThread } from '@/api';
 import { ErrorState } from '@/components/comments/ErrorState';
 import { LoadingState } from '@/components/comments/LoadingState';
 import { PageShell } from '@/components/layout/PageShell';
 import { ThreadComment } from '@/components/thread/ThreadComment';
 import { ThreadHeader } from '@/components/thread/ThreadHeader';
 import { Button } from '@/components/ui/button';
-import { useThread } from '@/hooks/useThread';
 import { en } from '@/locales/en';
+import type { CommentSummary, ThreadPageData } from '@/types';
 
-export function CommentPage() {
-  const { id } = useParams();
-  const { comment, thread, missing, sourceUrl, error, loadingMore, loadMore, reload } =
-    useThread(id);
+type CommentLoaderData = {
+  id: string;
+  comment: CommentSummary | null;
+  thread: ThreadPageData | null;
+  missing: boolean;
+  sourceUrl: string | null;
+  error: boolean;
+};
+
+export function CommentPage({ loaderData }: { loaderData: CommentLoaderData }) {
+  const { id, comment, missing, sourceUrl, error } = loaderData;
+  const revalidator = useRevalidator();
+  const [thread, setThread] = useState(loaderData.thread);
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const loadMore = async () => {
+    if (!thread || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const next = page + 1;
+      const pageData = await getThread(thread.thread.id, { commentId: id, page: next });
+      setThread({ ...pageData, comments: [...thread.comments, ...pageData.comments] });
+      setPage(next);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   if (error) {
     return (
       <PageShell mainClassName="mx-auto w-full max-w-[760px] px-[clamp(1rem,3vw,2rem)] pb-14 pt-8">
-        <ErrorState onRetry={() => void reload()} />
+        <ErrorState onRetry={() => void revalidator.revalidate()} />
       </PageShell>
     );
   }

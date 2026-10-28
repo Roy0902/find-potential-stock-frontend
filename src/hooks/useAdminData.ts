@@ -8,7 +8,16 @@ import {
 } from '@/api';
 import type { AdminAction, AdminComment, BlockedAuthor, ScrapeRun } from '@/types';
 
+export type AdminData = {
+  comments: AdminComment[];
+  blocked: BlockedAuthor[];
+  actions: AdminAction[];
+  runs: ScrapeRun[];
+  totalPages: number;
+};
+
 export function useAdminData({
+  initialData,
   page,
   q,
   author,
@@ -16,6 +25,7 @@ export function useAdminData({
   onClamp,
   onUnauthorized,
 }: {
+  initialData: AdminData;
   page: number;
   q: string;
   author: string;
@@ -23,12 +33,13 @@ export function useAdminData({
   onClamp: (page: number) => void;
   onUnauthorized: () => void;
 }) {
-  const [comments, setComments] = useState<AdminComment[]>([]);
-  const [blocked, setBlocked] = useState<BlockedAuthor[]>([]);
-  const [actions, setActions] = useState<AdminAction[]>([]);
-  const [runs, setRuns] = useState<ScrapeRun[]>([]);
-  const [totalPages, setTotalPages] = useState(0);
+  const [comments, setComments] = useState(initialData.comments);
+  const [blocked, setBlocked] = useState(initialData.blocked);
+  const [actions, setActions] = useState(initialData.actions);
+  const [runs, setRuns] = useState(initialData.runs);
+  const [totalPages, setTotalPages] = useState(initialData.totalPages);
   const sequence = useRef(0);
+  const isInitialMount = useRef(true);
 
   const load = useCallback(async () => {
     const current = ++sequence.current;
@@ -64,6 +75,10 @@ export function useAdminData({
   }, [author, onClamp, onUnauthorized, page, q, source]);
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     void load();
   }, [load]);
 

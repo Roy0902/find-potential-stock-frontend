@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { Forum } from '@/types';
 import { searchPath } from '@/lib/urls';
 import { cn } from '@/lib/utils';
