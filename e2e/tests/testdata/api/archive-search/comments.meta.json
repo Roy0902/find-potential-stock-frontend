@@ -1,0 +1,6 @@
+{
+  "endpoint": "/api/comments?pageSize=3",
+  "capturedAt": "2026-10-24T13:29:11.424Z",
+  "status": 200,
+  "note": "Passthrough baseline for drift detection only. Never an expectation."
+}

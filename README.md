@@ -126,16 +126,23 @@ About page repeats it. The backend exposes the same statement at `GET /api/discl
 
 ## Testing
 
-The Playwright suite lives in `../find-potential-stock/local-env/`:
+The committed Playwright suite is in `e2e/` (UI and API). It is a copy of the canonical
+workflow suite in `../find-potential-stock/local-env/`, which also owns the database seed and
+frozen plans.
 
 ```bash
-cd ../find-potential-stock/local-env
-npm run db:reset
-npx playwright test --project=chromiumheadless
+# from this folder, prepare the database once
+npm --prefix ../find-potential-stock/local-env run db:reset
+
+cd e2e
+npm install
+npx playwright install chromium
+npm test
 ```
 
-The Playwright config starts both the backend (`../../find-potential-stock-backend`) and this dev server unless
-`START_WEB_SERVER=0`, so they do not need to be running separately. `URL` overrides the base URL.
+The Playwright config starts the backend (`../../find-potential-stock-backend`), the SSR failure
+proxy and this dev server unless `START_WEB_SERVER=0`. `URL` overrides the base URL. See
+[`e2e/README.md`](e2e/README.md) for environment variables and the verified follow-up suite.
 
 ## Deployment
 

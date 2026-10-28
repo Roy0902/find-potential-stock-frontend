@@ -1,0 +1,14 @@
+{
+  "forums": [
+    {
+      "id": 2,
+      "name": "HKGolden",
+      "commentCount": 2
+    },
+    {
+      "id": 1,
+      "name": "LIHKG",
+      "commentCount": 69
+    }
+  ]
+}

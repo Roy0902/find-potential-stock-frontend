@@ -1,0 +1,30 @@
+{
+  "name": "find-potential-stock-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Playwright UI and API suite for the find-potential-stock frontend and backend.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:report": "playwright show-report",
+    "test:headed": "playwright test --project=chromiumheadless --headed",
+    "auth:setup": "tsx tests/storage-setup/login-storage-setup.ts",
+    "typecheck": "tsc --noEmit",
+    "trace": "node scripts/open-latest-trace.mjs"
+  },
+  "dependencies": {
+    "pg": "^8.16.3",
+    "vasu-playwright-utils": "^1.25.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^24.7.0",
+    "@types/pg": "^8.15.5",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
