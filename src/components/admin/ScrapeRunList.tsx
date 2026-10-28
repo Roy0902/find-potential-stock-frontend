@@ -1,5 +1,6 @@
 import type { ScrapeRun } from '@/types';
 import { cn } from '@/lib/utils';
+import { en } from '@/locales/en';
 
 export function ScrapeRunList({ runs }: { runs: ScrapeRun[] }) {
   return (
@@ -20,8 +21,11 @@ export function ScrapeRunList({ runs }: { runs: ScrapeRun[] }) {
           <span className="inline-flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <span>{run.mode}</span>
             <span>
-              added {run.commentsAdded}, updated {run.commentsUpdated}, skipped{' '}
-              {run.commentsSkippedRestricted}
+              {en.admin.scrapeSummary(
+                run.commentsAdded,
+                run.commentsUpdated,
+                run.commentsSkippedRestricted,
+              )}
             </span>
           </span>
         </li>

@@ -4,6 +4,7 @@ import { ApiError, login } from '@/api';
 import { PageShell } from '@/components/layout/PageShell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { en } from '@/locales/en';
 
 export function AdminLoginPage() {
   const [username, setUsername] = useState('owner');
@@ -18,7 +19,7 @@ export function AdminLoginPage() {
       await login(username, password);
       navigate('/admin');
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : 'Sign in failed.');
+      setError(caught instanceof ApiError ? caught.message : en.admin.signInFailed);
     }
   };
 
@@ -29,14 +30,14 @@ export function AdminLoginPage() {
     >
       <div className="mt-8 rounded-2xl border border-border bg-card p-7 shadow-lg">
         <p className="mb-2 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-primary">
-          Owner access
+          {en.admin.accessEyebrow}
         </p>
         <h1 className="mb-5 mt-0 text-[clamp(1.6rem,2.5vw,2rem)] font-bold tracking-tight">
-          Owner sign in
+          {en.admin.signInTitle}
         </h1>
         <form onSubmit={submit} className="grid gap-3">
           <label className="mt-1 text-xs font-bold uppercase tracking-wide text-muted-foreground" htmlFor="username">
-            Username
+            {en.admin.username}
           </label>
           <Input
             id="username"
@@ -44,7 +45,7 @@ export function AdminLoginPage() {
             onChange={(event) => setUsername(event.target.value)}
           />
           <label className="mt-1 text-xs font-bold uppercase tracking-wide text-muted-foreground" htmlFor="password">
-            Password
+            {en.admin.password}
           </label>
           <Input
             id="password"
@@ -56,7 +57,7 @@ export function AdminLoginPage() {
             type="submit"
             className="mt-2 min-h-11 border-primary bg-primary text-white hover:border-[#0a4656] hover:bg-[#0a4656] hover:text-white"
           >
-            Sign in
+            {en.admin.signIn}
           </Button>
           {error ? (
             <p

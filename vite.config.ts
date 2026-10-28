@@ -1,11 +1,20 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import { en } from './src/locales/en';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
+  const localeHtml = {
+    name: 'localize-html-metadata',
+    transformIndexHtml(html: string) {
+      return html
+        .replace('%SITE_TITLE%', en.site.name)
+        .replace('%SITE_DESCRIPTION%', en.site.description);
+    },
+  };
 
   return {
-    plugins: [react()],
+    plugins: [react(), localeHtml],
     resolve: {
       alias: {
         '@': '/src',

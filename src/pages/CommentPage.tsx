@@ -6,6 +6,7 @@ import { ThreadComment } from '@/components/thread/ThreadComment';
 import { ThreadHeader } from '@/components/thread/ThreadHeader';
 import { Button } from '@/components/ui/button';
 import { useThread } from '@/hooks/useThread';
+import { en } from '@/locales/en';
 
 export function CommentPage() {
   const { id } = useParams();
@@ -25,11 +26,11 @@ export function CommentPage() {
       <PageShell mainClassName="mx-auto w-full max-w-[760px] px-[clamp(1rem,3vw,2rem)] pb-14 pt-8">
         <div className="grid justify-items-start gap-2 rounded-xl border border-border bg-card p-8 shadow-sm">
           <p className="m-0 text-base font-bold text-foreground">
-            This comment is no longer available,
+            {en.comments.missing}
           </p>
           {sourceUrl ? (
             <a className="text-accent-foreground underline-offset-4 hover:underline" href={sourceUrl}>
-              View original post
+              {en.comments.viewOriginal}
             </a>
           ) : null}
         </div>
@@ -60,7 +61,7 @@ export function CommentPage() {
           onClick={() => void loadMore()}
           disabled={loadingMore}
         >
-          Load more
+          {en.comments.loadMore}
         </Button>
       ) : null}
     </PageShell>

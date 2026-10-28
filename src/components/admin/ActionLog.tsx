@@ -1,5 +1,6 @@
 import type { AdminAction } from '@/types';
 import { formatTime } from '@/lib/format';
+import { en } from '@/locales/en';
 
 export function ActionLog({ actions }: { actions: AdminAction[] }) {
   return (
@@ -11,7 +12,7 @@ export function ActionLog({ actions }: { actions: AdminAction[] }) {
           </span>
           <span className="inline-flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <span>
-              {action.targetType} #{action.targetId}
+              {en.admin.actionTarget(action.targetType, action.targetId)}
             </span>
             <time dateTime={action.createdAt}>{formatTime(action.createdAt)}</time>
           </span>

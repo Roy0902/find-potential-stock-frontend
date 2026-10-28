@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { en } from '@/locales/en';
 
 export function SiteName() {
   return (
@@ -10,9 +11,9 @@ export function SiteName() {
         className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-primary to-[#17788e] text-[0.67rem] font-extrabold tracking-wide text-white shadow-sm max-[480px]:size-[2.15rem]"
         aria-hidden="true"
       >
-        FP
+        {en.site.mark}
       </span>
-      <span>Find Potential Stock</span>
+      <span>{en.site.name}</span>
     </Link>
   );
 }

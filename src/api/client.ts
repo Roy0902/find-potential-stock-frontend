@@ -1,3 +1,5 @@
+import { en } from '@/locales/en';
+
 const base = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
 
 type Envelope<T> = {
@@ -57,7 +59,7 @@ async function read<T>(response: Response): Promise<T> {
     throw new ApiError(
       response.status,
       String(envelope?.code ?? response.status),
-      envelope?.message ?? 'Request failed.',
+      envelope?.message ?? en.errors.requestFailed,
       body && typeof body === 'object' ? (body as Record<string, unknown>) : {},
     );
   }

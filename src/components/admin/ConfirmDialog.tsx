@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { en } from '@/locales/en';
 
 export function ConfirmDialog({
   message,
@@ -19,10 +20,10 @@ export function ConfirmDialog({
     >
       <p className="mb-1 font-bold">{message}</p>
       <Button variant="destructive" type="button" onClick={onConfirm} disabled={busy}>
-        Confirm
+        {en.admin.confirm}
       </Button>
       <Button variant="outline" type="button" onClick={onCancel}>
-        Cancel
+        {en.admin.cancel}
       </Button>
     </div>
   );

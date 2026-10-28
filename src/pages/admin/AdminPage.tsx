@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAdminData } from '@/hooks/useAdminData';
 import type { AdminComment, PendingAction } from '@/types';
+import { en } from '@/locales/en';
 
 type Dialog =
   | { kind: 'delete'; commentId: number }
@@ -62,7 +63,7 @@ export function AdminPage() {
       navigate('/admin/login');
       return;
     }
-    setActionError(caught instanceof ApiError ? caught.message : 'Action failed.');
+    setActionError(caught instanceof ApiError ? caught.message : en.admin.actionFailed);
   };
 
   const toggleHidden = async (comment: AdminComment) => {
@@ -133,10 +134,10 @@ export function AdminPage() {
       >
         <div className="mb-6">
           <p className="mb-2 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-primary">
-            Owner tools
+            {en.admin.toolsEyebrow}
           </p>
           <h1 className="m-0 text-[clamp(1.8rem,2.8vw,2.35rem)] font-bold tracking-[-0.035em]">
-            Admin
+            {en.admin.title}
           </h1>
         </div>
         {actionError ? (
@@ -148,7 +149,7 @@ export function AdminPage() {
           </p>
         ) : null}
 
-        <AdminSection title="Comments">
+        <AdminSection title={en.admin.comments}>
         <form
           onSubmit={search}
           className="mb-4 grid grid-cols-[repeat(3,minmax(0,1fr))_auto] items-end gap-3 max-[900px]:grid-cols-2 max-[767px]:grid-cols-1"
@@ -158,7 +159,7 @@ export function AdminPage() {
               className="text-[0.7rem] font-bold uppercase tracking-wide text-muted-foreground"
               htmlFor="admin-q"
             >
-              Search comments
+              {en.search.label}
             </label>
             <Input
               id="admin-q"
@@ -175,7 +176,7 @@ export function AdminPage() {
               className="text-[0.7rem] font-bold uppercase tracking-wide text-muted-foreground"
               htmlFor="admin-author"
             >
-              Author
+              {en.admin.authors}
             </label>
             <Input
               id="admin-author"
@@ -192,7 +193,7 @@ export function AdminPage() {
               className="text-[0.7rem] font-bold uppercase tracking-wide text-muted-foreground"
               htmlFor="admin-source"
             >
-              Source
+              {en.admin.source}
             </label>
             <Input
               id="admin-source"
@@ -208,12 +209,12 @@ export function AdminPage() {
             type="submit"
             className="border-primary bg-primary text-white hover:border-[#0a4656] hover:bg-[#0a4656] hover:text-white max-[900px]:col-span-full max-[900px]:justify-self-start max-[767px]:w-full"
           >
-            Search
+            {en.search.submit}
           </Button>
         </form>
 
         <ul
-          aria-label="Admin comments"
+          aria-label={en.accessibility.adminCommentsList}
           className="m-0 grid list-none gap-2 p-0"
           aria-live="polite"
         >
@@ -242,7 +243,7 @@ export function AdminPage() {
         </AdminSection>
 
         <div className="grid grid-cols-3 gap-[1.15rem] max-[1023px]:grid-cols-2 max-[767px]:grid-cols-1 max-[1023px]:[&>section:last-child]:col-span-full">
-          <AdminSection className="mb-0" title="Blocked authors">
+          <AdminSection className="mb-0" title={en.admin.blockedAuthors}>
           <BlockedAuthorList
             authors={blocked}
             pendingAuthorId={pendingAuthorId}
@@ -250,18 +251,20 @@ export function AdminPage() {
           />
           </AdminSection>
 
-          <AdminSection className="mb-0" title="Action log">
+          <AdminSection className="mb-0" title={en.admin.actionLog}>
           <ActionLog actions={actions} />
           </AdminSection>
 
-          <AdminSection className="mb-0" title="Collection status">
+          <AdminSection className="mb-0" title={en.admin.collectionStatus}>
           <ScrapeRunList runs={runs} />
           </AdminSection>
         </div>
       </PageShell>
       {dialog ? (
         <ConfirmDialog
-          message={dialog.kind === 'delete' ? 'Delete this comment?' : 'Block this author?'}
+          message={
+            dialog.kind === 'delete' ? en.admin.deleteConfirmation : en.admin.blockConfirmation
+          }
           onConfirm={() => void confirmDialog()}
           onCancel={() => setDialog(null)}
           busy={pending !== null}

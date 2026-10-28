@@ -1,6 +1,7 @@
 import type { AdminComment } from '@/types';
 import { formatAuthor, formatTime } from '@/lib/format';
 import { Button } from '@/components/ui/button';
+import { en } from '@/locales/en';
 
 export function AdminCommentRow({
   comment,
@@ -26,12 +27,12 @@ export function AdminCommentRow({
           <time dateTime={comment.postedAt}>{formatTime(comment.postedAt)}</time>
           {comment.isHidden ? (
             <span className="rounded-full bg-[#fffaeb] px-2 py-0.5 text-[0.66rem] font-bold uppercase text-[#b54708]">
-              Hidden
+              {en.admin.hidden}
             </span>
           ) : null}
           {comment.author.isBlocked ? (
             <span className="rounded-full bg-[#fef3f2] px-2 py-0.5 text-[0.66rem] font-bold uppercase text-[#b42318]">
-              Blocked
+              {en.admin.blocked}
             </span>
           ) : null}
         </div>
@@ -39,13 +40,13 @@ export function AdminCommentRow({
       </div>
       <div className="flex flex-wrap justify-end gap-2 max-[767px]:justify-start">
         <Button variant="outline" size="sm" type="button" onClick={onToggleHidden} disabled={pending}>
-          {comment.isHidden ? 'Unhide' : 'Hide'}
+          {comment.isHidden ? en.admin.unhide : en.admin.hide}
         </Button>
         <Button variant="outline" size="sm" type="button" onClick={onDelete} disabled={pending}>
-          Delete
+          {en.admin.delete}
         </Button>
         <Button variant="outline" size="sm" type="button" onClick={onBlock} disabled={comment.author.isBlocked || pending}>
-          Block
+          {en.admin.block}
         </Button>
       </div>
     </li>

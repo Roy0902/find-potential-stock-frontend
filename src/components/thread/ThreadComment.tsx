@@ -1,6 +1,7 @@
 import type { CommentNode } from '@/types';
 import { formatAuthor, formatTime } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { en } from '@/locales/en';
 
 export function ThreadComment({
   node,
@@ -29,14 +30,18 @@ export function ThreadComment({
         <span className="text-[0.81rem] font-bold text-secondary-foreground">{formatAuthor(node.author)}</span>{' '}
         <time dateTime={node.postedAt}>{formatTime(node.postedAt)}</time>
       </header>
-      {labelled ? <p className="mb-2 text-xs italic text-muted-foreground">Replying to an earlier comment,</p> : null}
+      {labelled ? (
+        <p className="mb-2 text-xs italic text-muted-foreground">
+          {en.comments.replyingToEarlier}
+        </p>
+      ) : null}
       <p className="mb-2.5 whitespace-pre-wrap text-[0.94rem] leading-7 text-foreground [overflow-wrap:anywhere]" lang={node.lang ?? undefined}>
         {node.body}
       </p>
-      <a href={node.url}>View original post</a>
+      <a href={node.url}>{en.comments.viewOriginal}</a>
       {node.collapsed ? (
         <a href={node.url} className="ml-3">
-          View on source site
+          {en.comments.viewOnSource}
         </a>
       ) : null}
       {node.children.length > 0 ? (

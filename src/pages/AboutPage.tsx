@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { PageShell } from '@/components/layout/PageShell';
-import { PROJECT_DISCLAIMER } from '@/lib/constants';
+import { en } from '@/locales/en';
 
 export function AboutPage() {
   return (
@@ -10,32 +10,30 @@ export function AboutPage() {
           to="/"
           className="mb-4 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground no-underline hover:text-accent-foreground"
         >
-          Back to archive
+          {en.navigation.backToArchive}
         </Link>
         <p className="mb-2 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-primary">
-          About this project
+          {en.about.eyebrow}
         </p>
         <h1 className="mb-4 mt-0 text-[clamp(1.8rem,2.8vw,2.4rem)] font-bold tracking-[-0.035em]">
-          About
+          {en.about.title}
         </h1>
         <p className="my-3 text-secondary-foreground leading-relaxed">
-          This archive collects public forum comments about stocks so they can be searched in one
-          place.
+          {en.about.intro}
         </p>
-        <p className="my-3 text-secondary-foreground leading-relaxed">{PROJECT_DISCLAIMER}</p>
-        <h2 className="mb-3 mt-8 text-lg font-semibold tracking-tight">Sources</h2>
+        <p className="my-3 text-secondary-foreground leading-relaxed">{en.site.projectDisclaimer}</p>
+        <h2 className="mb-3 mt-8 text-lg font-semibold tracking-tight">{en.about.sources}</h2>
         <ul className="my-3 list-disc space-y-2 pl-5 text-secondary-foreground leading-relaxed">
           <li>
-            <a href="https://lihkg.com">LIHKG</a>
+            <a href="https://lihkg.com">{en.about.lihkg}</a>
           </li>
           <li>
-            <a href="https://forum.hkgolden.com">HKGolden</a>
+            <a href="https://forum.hkgolden.com">{en.about.hkGolden}</a>
           </li>
         </ul>
-        <h2 className="mb-3 mt-8 text-lg font-semibold tracking-tight">How mentions are detected</h2>
+        <h2 className="mb-3 mt-8 text-lg font-semibold tracking-tight">{en.about.detection}</h2>
         <p className="my-3 text-secondary-foreground leading-relaxed">
-          Comments are matched by cashtag ($AAPL), by bare uppercase tickers (AAPL), and by alias
-          matching for company names and nicknames such as 蘋果 for AAPL.
+          {en.about.detectionDescription}
         </p>
       </article>
     </PageShell>

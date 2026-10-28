@@ -1,7 +1,9 @@
+import { en } from '@/locales/en';
+
 export function LoadingState() {
   return (
     <>
-      <p className="sr-only">Loading…</p>
+      <p className="sr-only">{en.comments.loading}</p>
       <div
         className="grid grid-cols-3 gap-[1.15rem] max-[1100px]:grid-cols-2 max-[1023px]:grid-cols-2 max-[767px]:grid-cols-1"
         aria-hidden="true"

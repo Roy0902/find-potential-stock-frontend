@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { searchPath } from '@/lib/urls';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { en } from '@/locales/en';
 
 export function SearchBar({
   initial = '',
@@ -26,13 +27,13 @@ export function SearchBar({
       onSubmit={submit}
     >
       <label className="sr-only" htmlFor="search-input">
-        Search comments
+        {en.search.label}
       </label>
       <Input
         id="search-input"
         type="search"
         className="min-w-0 flex-1 max-[480px]:basis-full"
-        placeholder="Search by keyword or stock"
+        placeholder={en.search.placeholder}
         value={value}
         onChange={(event) => setValue(event.target.value)}
       />
@@ -40,7 +41,7 @@ export function SearchBar({
         type="submit"
         className="min-h-[2.6rem] flex-none border-primary bg-primary px-[1.1rem] text-white hover:border-[#0a4656] hover:bg-[#0a4656] hover:text-white max-[480px]:w-full"
       >
-        Search
+        {en.search.submit}
       </Button>
     </form>
   );

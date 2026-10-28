@@ -6,7 +6,7 @@ archive, comment detail, about page, owner login and admin page.
 Tailwind is configured in `tailwind.config.js` and `postcss.config.js`. Shared shadcn-style controls
 live in `src/components/ui/`; use `Button`, `Input`, and the `cn` helper for new UI. The global
 Tailwind entry point and theme tokens are in `src/styles.css`; page and component styling uses
-Tailwind utility classes.
+Tailwind utility classes. Displayed English copy is centralized in `src/locales/en.ts`.
 
 This folder lives at the workspace root (`C:\Users\pigcr\Documents\Workspace\find-potential-stock-frontend`), outside
 the `find-potential-stock` git repository. The database tooling and Playwright suite stay in
@@ -72,6 +72,7 @@ src/
     index.ts              re-exports
   types/                  common, comment, thread, forum, admin, index
   lib/                    format (author/time), urls (searchPath), constants
+  locales/en.ts           displayed English copy and parameterized messages
   hooks/                  useArchive, useThread, useAdminData
   components/
     ui/                  Tailwind/shadcn-style Button and Input primitives

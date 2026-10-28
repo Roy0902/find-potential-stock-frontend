@@ -1,6 +1,7 @@
 import type { BlockedAuthor } from '@/types';
 import { formatAuthor } from '@/lib/format';
 import { Button } from '@/components/ui/button';
+import { en } from '@/locales/en';
 
 export function BlockedAuthorList({
   authors,
@@ -25,7 +26,7 @@ export function BlockedAuthorList({
             onClick={() => onUnblock(entry.id)}
             disabled={pendingAuthorId === entry.id}
           >
-            Unblock
+            {en.admin.unblock}
           </Button>
         </li>
       ))}
