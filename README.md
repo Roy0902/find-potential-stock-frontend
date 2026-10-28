@@ -1,7 +1,12 @@
 # Frontend
 
-React 18 + Vite + TypeScript. Public comment archive, comment detail, about page, owner login and
-admin page.
+React 18 + Vite + TypeScript with Tailwind CSS and shadcn/ui-compatible components. Public comment
+archive, comment detail, about page, owner login and admin page.
+
+Tailwind is configured in `tailwind.config.js` and `postcss.config.js`. Shared shadcn-style controls
+live in `src/components/ui/`; use `Button`, `Input`, and the `cn` helper for new UI. The global
+Tailwind entry point and theme tokens are in `src/styles.css`; page and component styling uses
+Tailwind utility classes.
 
 This folder lives at the workspace root (`C:\Users\pigcr\Documents\Workspace\find-potential-stock-frontend`), outside
 the `find-potential-stock` git repository. The database tooling and Playwright suite stay in
@@ -69,6 +74,7 @@ src/
   lib/                    format (author/time), urls (searchPath), constants
   hooks/                  useArchive, useThread, useAdminData
   components/
+    ui/                  Tailwind/shadcn-style Button and Input primitives
     common/               StateMessage (base for empty/error panels)
     layout/               Bar (base header), SiteName, Header, AdminBar, Footer,
                           SkipLink, PageShell (bar + main + footer)
@@ -80,7 +86,7 @@ src/
                           ActionLog, ScrapeRunList, AdminSection
   pages/                  ArchivePage, CommentPage, AboutPage, NotFoundPage
   pages/admin/            AdminLoginPage, AdminPage
-  styles.css              single stylesheet
+  styles.css              Tailwind entry point and theme tokens
 ```
 
 Imports use the `@/` alias (`@/api`, `@/components/...`), configured in `vite.config.ts` and

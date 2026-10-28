@@ -15,6 +15,8 @@ import { ConfirmDialog } from '@/components/admin/ConfirmDialog';
 import { ScrapeRunList } from '@/components/admin/ScrapeRunList';
 import { Pagination } from '@/components/comments/Pagination';
 import { PageShell } from '@/components/layout/PageShell';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useAdminData } from '@/hooks/useAdminData';
 import type { AdminComment, PendingAction } from '@/types';
 
@@ -125,18 +127,40 @@ export function AdminPage() {
 
   return (
     <>
-      <PageShell bar="admin" mainClassName="admin-page">
-        <div className="admin-heading">
-          <p className="eyebrow">Owner tools</p>
-          <h1>Admin</h1>
+      <PageShell
+        bar="admin"
+        mainClassName="mx-auto w-full max-w-[1180px] px-[clamp(1rem,3vw,2rem)] pb-14 pt-8"
+      >
+        <div className="mb-6">
+          <p className="mb-2 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-primary">
+            Owner tools
+          </p>
+          <h1 className="m-0 text-[clamp(1.8rem,2.8vw,2.35rem)] font-bold tracking-[-0.035em]">
+            Admin
+          </h1>
         </div>
-        {actionError ? <p role="alert">{actionError}</p> : null}
+        {actionError ? (
+          <p
+            className="mb-4 rounded-sm border border-[#f0cbc7] bg-[#fef3f2] px-4 py-3 text-sm font-semibold text-[#b42318]"
+            role="alert"
+          >
+            {actionError}
+          </p>
+        ) : null}
 
         <AdminSection title="Comments">
-        <form onSubmit={search} className="admin-search">
-          <div className="field">
-            <label htmlFor="admin-q">Search comments</label>
-            <input
+        <form
+          onSubmit={search}
+          className="mb-4 grid grid-cols-[repeat(3,minmax(0,1fr))_auto] items-end gap-3 max-[900px]:grid-cols-2 max-[767px]:grid-cols-1"
+        >
+          <div className="grid gap-1">
+            <label
+              className="text-[0.7rem] font-bold uppercase tracking-wide text-muted-foreground"
+              htmlFor="admin-q"
+            >
+              Search comments
+            </label>
+            <Input
               id="admin-q"
               type="search"
               value={query}
@@ -146,9 +170,14 @@ export function AdminPage() {
               }}
             />
           </div>
-          <div className="field">
-            <label htmlFor="admin-author">Author</label>
-            <input
+          <div className="grid gap-1">
+            <label
+              className="text-[0.7rem] font-bold uppercase tracking-wide text-muted-foreground"
+              htmlFor="admin-author"
+            >
+              Author
+            </label>
+            <Input
               id="admin-author"
               type="search"
               value={author}
@@ -158,9 +187,14 @@ export function AdminPage() {
               }}
             />
           </div>
-          <div className="field">
-            <label htmlFor="admin-source">Source</label>
-            <input
+          <div className="grid gap-1">
+            <label
+              className="text-[0.7rem] font-bold uppercase tracking-wide text-muted-foreground"
+              htmlFor="admin-source"
+            >
+              Source
+            </label>
+            <Input
               id="admin-source"
               type="search"
               value={source}
@@ -170,10 +204,19 @@ export function AdminPage() {
               }}
             />
           </div>
-          <button type="submit">Search</button>
+          <Button
+            type="submit"
+            className="border-primary bg-primary text-white hover:border-[#0a4656] hover:bg-[#0a4656] hover:text-white max-[900px]:col-span-full max-[900px]:justify-self-start max-[767px]:w-full"
+          >
+            Search
+          </Button>
         </form>
 
-        <ul aria-label="Admin comments" className="admin-list" aria-live="polite">
+        <ul
+          aria-label="Admin comments"
+          className="m-0 grid list-none gap-2 p-0"
+          aria-live="polite"
+        >
           {comments.map((comment) => {
             const rowPending =
               pending !== null && 'commentId' in pending && pending.commentId === comment.id;
@@ -198,8 +241,8 @@ export function AdminPage() {
         <Pagination page={page} totalPages={totalPages} onChange={setPage} />
         </AdminSection>
 
-        <div className="admin-grid">
-          <AdminSection title="Blocked authors">
+        <div className="grid grid-cols-3 gap-[1.15rem] max-[1023px]:grid-cols-2 max-[767px]:grid-cols-1 max-[1023px]:[&>section:last-child]:col-span-full">
+          <AdminSection className="mb-0" title="Blocked authors">
           <BlockedAuthorList
             authors={blocked}
             pendingAuthorId={pendingAuthorId}
@@ -207,11 +250,11 @@ export function AdminPage() {
           />
           </AdminSection>
 
-          <AdminSection title="Action log">
+          <AdminSection className="mb-0" title="Action log">
           <ActionLog actions={actions} />
           </AdminSection>
 
-          <AdminSection title="Collection status">
+          <AdminSection className="mb-0" title="Collection status">
           <ScrapeRunList runs={runs} />
           </AdminSection>
         </div>

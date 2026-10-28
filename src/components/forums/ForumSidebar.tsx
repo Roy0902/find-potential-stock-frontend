@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Forum } from '@/types';
 import { searchPath } from '@/lib/urls';
+import { cn } from '@/lib/utils';
 
 export function ForumSidebar({
   forums,
@@ -19,14 +20,20 @@ export function ForumSidebar({
     <nav
       id="forum-sidebar"
       aria-label="Forums"
-      className={`sidebar${open ? ' open' : ''}`}
+      className={cn(
+        'sticky top-[5.6rem] rounded-xl border border-border bg-card p-4 shadow-sm max-[767px]:static',
+        open ? 'max-[767px]:block' : 'max-[767px]:hidden',
+      )}
     >
-      <p className="sidebar-title">Forums</p>
-      <div className="sidebar-links">
+      <p className="mb-3 px-2 text-[0.68rem] font-extrabold uppercase tracking-[0.13em] text-muted-foreground">
+        Forums
+      </p>
+      <div className="grid gap-1">
         <Link
           to={searchPath(query)}
           aria-current={activeForum ? undefined : 'page'}
           onClick={onNavigate}
+          className="group flex min-h-10 items-center justify-between gap-3 rounded-sm px-2.5 py-2 text-sm font-semibold text-foreground no-underline transition-colors hover:bg-muted hover:text-accent-foreground aria-[current=page]:bg-accent aria-[current=page]:text-accent-foreground aria-[current=page]:shadow-[inset_3px_0_0_var(--primary)]"
         >
           <span>All forums</span>
         </Link>
@@ -36,10 +43,13 @@ export function ForumSidebar({
             to={searchPath(query, String(forum.id))}
             aria-current={activeForum === String(forum.id) ? 'page' : undefined}
             onClick={onNavigate}
+            className="flex min-h-10 items-center justify-between gap-3 rounded-sm px-2.5 py-2 text-sm font-semibold text-foreground no-underline transition-colors hover:bg-muted hover:text-accent-foreground aria-[current=page]:bg-accent aria-[current=page]:text-accent-foreground aria-[current=page]:shadow-[inset_3px_0_0_var(--primary)]"
           >
-            <span className="sidebar-forum-label">
+            <span className="flex w-full items-center justify-between gap-3">
               {forum.name}{' '}
-              <span className="sidebar-forum-count">{forum.commentCount}</span>
+              <span className="flex-none rounded-full bg-muted px-2 py-0.5 text-xs tabular-nums text-muted-foreground group-aria-[current=page]:bg-card group-aria-[current=page]:text-accent-foreground">
+                {forum.commentCount}
+              </span>
             </span>
           </Link>
         ))}

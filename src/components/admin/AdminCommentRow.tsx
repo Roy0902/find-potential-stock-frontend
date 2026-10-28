@@ -1,5 +1,6 @@
 import type { AdminComment } from '@/types';
 import { formatAuthor, formatTime } from '@/lib/format';
+import { Button } from '@/components/ui/button';
 
 export function AdminCommentRow({
   comment,
@@ -15,29 +16,37 @@ export function AdminCommentRow({
   onBlock: () => void;
 }) {
   return (
-    <li>
-      <div className="admin-row-main">
-        <div className="admin-row-meta">
-          <span className="comment-author">{formatAuthor(comment.author)}</span>
+    <li className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-2 rounded-sm border border-border bg-[#fbfdfd] p-3.5 max-[767px]:grid-cols-1">
+      <div className="flex min-w-0 flex-col gap-1">
+        <div className="flex flex-wrap items-center gap-2 text-[0.72rem] text-muted-foreground">
+          <span className="text-[0.81rem] font-bold text-secondary-foreground">
+            {formatAuthor(comment.author)}
+          </span>
           <span>{comment.sourceName}</span>
           <time dateTime={comment.postedAt}>{formatTime(comment.postedAt)}</time>
-          {comment.isHidden ? <span className="badge badge--hidden">Hidden</span> : null}
+          {comment.isHidden ? (
+            <span className="rounded-full bg-[#fffaeb] px-2 py-0.5 text-[0.66rem] font-bold uppercase text-[#b54708]">
+              Hidden
+            </span>
+          ) : null}
           {comment.author.isBlocked ? (
-            <span className="badge badge--blocked">Blocked</span>
+            <span className="rounded-full bg-[#fef3f2] px-2 py-0.5 text-[0.66rem] font-bold uppercase text-[#b42318]">
+              Blocked
+            </span>
           ) : null}
         </div>
-        <p className="admin-row-excerpt">{comment.excerpt}</p>
+        <p className="m-0 text-sm leading-relaxed text-secondary-foreground">{comment.excerpt}</p>
       </div>
-      <div className="admin-row-actions">
-        <button type="button" onClick={onToggleHidden} disabled={pending}>
+      <div className="flex flex-wrap justify-end gap-2 max-[767px]:justify-start">
+        <Button variant="outline" size="sm" type="button" onClick={onToggleHidden} disabled={pending}>
           {comment.isHidden ? 'Unhide' : 'Hide'}
-        </button>
-        <button type="button" onClick={onDelete} disabled={pending}>
+        </Button>
+        <Button variant="outline" size="sm" type="button" onClick={onDelete} disabled={pending}>
           Delete
-        </button>
-        <button type="button" onClick={onBlock} disabled={comment.author.isBlocked || pending}>
+        </Button>
+        <Button variant="outline" size="sm" type="button" onClick={onBlock} disabled={comment.author.isBlocked || pending}>
           Block
-        </button>
+        </Button>
       </div>
     </li>
   );

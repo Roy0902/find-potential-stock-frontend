@@ -14,8 +14,16 @@ export function Header({
     <Bar>
       <SiteName />
       <SearchBar initial={initialQuery} activeForum={activeForum} />
-      <nav className="site-nav" aria-label="Site">
-        <Link to="/about">About</Link>
+      <nav
+        className="flex items-center justify-self-end gap-1 max-[767px]:col-start-2 max-[767px]:row-start-1"
+        aria-label="Site"
+      >
+        <Link
+          to="/about"
+          className="inline-flex min-h-10 items-center rounded-full px-3 text-sm font-semibold text-muted-foreground no-underline transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          About
+        </Link>
       </nav>
     </Bar>
   );

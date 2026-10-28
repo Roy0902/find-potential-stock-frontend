@@ -1,12 +1,13 @@
 import { StateMessage } from '@/components/common/StateMessage';
+import { Button } from '@/components/ui/button';
 
 export function ErrorState({ onRetry }: { onRetry: () => void }) {
   return (
     <StateMessage tone="error">
-      <p>Something went wrong.</p>
-      <button type="button" onClick={onRetry}>
+      <p className="m-0 text-base font-bold text-foreground">Something went wrong.</p>
+      <Button type="button" className="mt-2" onClick={onRetry}>
         Retry
-      </button>
+      </Button>
     </StateMessage>
   );
 }
