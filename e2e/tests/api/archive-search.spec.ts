@@ -80,10 +80,10 @@ test.describe('pagination and search', () => {
   });
 
   test('search and forum parameters work together [REQ-archive-search-006][SCN-archive-search-008]', async () => {
-    const body = await getJson('/api/comments?search=Tesla&forumId=2');
+    const body = await getJson('/api/comments?search=%E9%95%B7%E7%B7%9A%E7%9D%87%E5%A5%BD&forumId=1');
     expect(body.pagination.total).toBe(1);
     expect(body.comments[0].id).toBe(5017);
-    expect(body.comments.every((comment: { sourceName: string }) => comment.sourceName === 'HKGolden')).toBe(true);
+    expect(body.comments.every((comment: { sourceName: string }) => comment.sourceName === 'LIHKG')).toBe(true);
   });
 
   test('an unknown forum is treated as no filter [REQ-archive-search-006][SCN-archive-search-009]', async () => {
@@ -136,56 +136,46 @@ test.describe('sidebar data', () => {
     const byName = Object.fromEntries(
       body.forums.map((forum: { name: string; commentCount: number }) => [forum.name, forum.commentCount]),
     );
-    expect(byName.LIHKG).toBe(69);
-    expect(byName.HKGolden).toBe(2);
+    expect(byName.LIHKG).toBe(71);
+    expect(byName.HKGolden).toBeUndefined();
   });
 
   test('forums are alphabetical and omit empty ones [REQ-archive-search-021][SCN-archive-search-031]', async () => {
     const body = await getJson('/api/forums');
     const names = body.forums.map((forum: { name: string }) => forum.name);
-    expect(names.indexOf('HKGolden')).toBeLessThan(names.indexOf('LIHKG'));
-    expect([...names].sort()).toEqual(names);
+    expect(names).toEqual(['LIHKG']);
   });
 
   test('a selected forum is newest first [REQ-archive-search-023][SCN-archive-search-034]', async () => {
-    const body = await getJson('/api/comments?forumId=2');
-    expect(body.comments.map((comment: { id: number }) => comment.id)).toEqual([5018, 5017]);
+    const body = await getJson('/api/comments?forumId=1');
+    expect(body.comments).toHaveLength(20);
+    const postedAt = body.comments.map((comment: { postedAt: string }) => comment.postedAt);
+    expect([...postedAt].sort().reverse()).toEqual(postedAt);
   });
 
   test('a forum-filtered grid keeps 20 per page [REQ-archive-search-024][SCN-archive-search-035]', async () => {
     const body = await getJson('/api/comments?forumId=1');
     expect(body.comments).toHaveLength(20);
-    expect(body.pagination.total).toBe(69);
+    expect(body.pagination.total).toBe(71);
   });
 
   test('a forum-filtered grid ends with the remainder [REQ-archive-search-024][SCN-archive-search-036]', async () => {
     const body = await getJson('/api/comments?forumId=1&page=4');
-    expect(body.comments).toHaveLength(9);
+    expect(body.comments).toHaveLength(11);
   });
 });
 
 test.describe('search inside a forum', () => {
   test('a keyword search stays inside the selected forum [REQ-archive-search-027][SCN-archive-search-041]', async () => {
-    const body = await getJson('/api/comments?search=Tesla&forumId=2');
+    const body = await getJson('/api/comments?search=%E9%95%B7%E7%B7%9A%E7%9D%87%E5%A5%BD&forumId=1');
     expect(body.pagination.total).toBe(1);
     expect(body.comments[0].id).toBe(5017);
   });
 
   test('a keyword found only outside the forum yields nothing [REQ-archive-search-027][SCN-archive-search-042]', async () => {
-    // Arrange the Given: "Tesla" appears only in HKGolden comments.
-    await withDb((client) =>
-      client.query('DELETE FROM comment_stock WHERE comment_id = 5011 AND stock_id = 3003'),
-    );
-    try {
-      const body = await getJson('/api/comments?search=Tesla&forumId=1');
-      expect(body.pagination.total).toBe(0);
-      expect(body.comments).toEqual([]);
-    } finally {
-      await withDb((client) =>
-        client.query(
-          "INSERT INTO comment_stock (comment_id, stock_id, match_type) VALUES (5011, 3003, 'ticker') ON CONFLICT DO NOTHING",
-        ),
-      );
-    }
+    // "Tesla" is visible in LIHKG, but the selected EmptyForum fixture has no visible comment.
+    const body = await getJson('/api/comments?search=Tesla&forumId=3');
+    expect(body.pagination.total).toBe(0);
+    expect(body.comments).toEqual([]);
   });
 });

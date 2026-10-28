@@ -21,6 +21,12 @@ npm --prefix ../../find-potential-stock/local-env run db:setup
 npm --prefix ../../find-potential-stock/local-env run db:reset
 ```
 
+The seed contains LIHKG data only; HKGolden is not scraped and was removed from the fixtures.
+
+**Use a dedicated test database.** The admin follow-up tests reset the database between tests
+through `DB_RESET_COMMAND`. Pointing `DATABASE_URL` at a database that holds live scraped data
+will truncate it.
+
 Point `DATABASE_URL` at an equivalent database if yours is elsewhere.
 
 ## Install

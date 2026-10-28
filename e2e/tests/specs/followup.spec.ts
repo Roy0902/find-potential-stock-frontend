@@ -121,11 +121,10 @@ test.describe('archive-search follow-up', () => {
   });
 
   test('a forum with no visible comment is omitted [SCN-followup-003]', async () => {
-    await withHidden([5017, 5018], async () => {
-      await gotoURL('/');
-      await expect(getLocatorByRole('navigation', { name: 'Forums' })).toBeVisible();
-      await expect(getLocatorByRole('link', { name: /^HKGolden/ })).toHaveCount(0);
-    });
+    await gotoURL('/');
+    await expect(getLocatorByRole('navigation', { name: 'Forums' })).toBeVisible();
+    await expect(getLocatorByRole('link', { name: /^LIHKG/ })).toBeVisible();
+    await expect(getLocatorByRole('link', { name: /^EmptyForum/ })).toHaveCount(0);
   });
 
   test('with every comment hidden only All forums remains [SCN-followup-004]', async () => {
@@ -267,7 +266,9 @@ test.describe('thread-view follow-up', () => {
   test('a thread with no visible comment has an empty tree [SCN-followup-020]', async () => {
     await seedFixture({ id: 9962, body: 'Hidden only', lang: 'en', hidden: true });
     try {
-      const response = await fetch('http://localhost:3000/api/threads/9960');
+      const response = await fetch(
+        `${process.env.API_URL ?? 'http://localhost:3000'}/api/threads/9960`,
+      );
       const body = await response.json();
       expect(response.status).toBe(200);
       expect(body.thread.title).toBe('Followup thread');

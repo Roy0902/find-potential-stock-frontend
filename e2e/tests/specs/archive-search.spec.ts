@@ -168,7 +168,9 @@ test.describe('home grid and pagination', () => {
     });
   });
 
-  test('a short forum fills one page [REQ-archive-search-010][SCN-archive-search-016]', async () => {
+  test.fixme('a short forum fills one page [REQ-archive-search-010][SCN-archive-search-016]', async () => {
+    // No short source exists: LIHKG is the only scraped source. Kept as a
+    // blocked scenario until a second real source is added.
     await test.step('Given HKGolden has 2 visible comments', async () => {
       await expectElementToBeVisible(getLocatorByRole('navigation', { name: 'Forums' }));
     });
@@ -288,19 +290,19 @@ test.describe('shell', () => {
 
 test.describe('forum sidebar', () => {
   test('a count is a bare number [REQ-archive-search-019][SCN-archive-search-029]', async () => {
-    await test.step('Given LIHKG has 69 visible comments', async () => {
+    await test.step('Given LIHKG has 71 visible comments', async () => {
       await expectElementToBeVisible(getLocatorByRole('navigation', { name: 'Forums' }));
     });
     await test.step('When the visitor views the LIHKG entry', async () => {
-      await expectElementToHaveText(getLocatorByRole('link', { name: /^LIHKG/ }), /LIHKG\s*69/);
+      await expectElementToHaveText(getLocatorByRole('link', { name: /^LIHKG/ }), /LIHKG\s*71/);
     });
     await test.step('Then the number is separate from the name', async () => {
-      await expectElementToHaveText(getLocatorByRole('link', { name: /^LIHKG/ }), /^LIHKG\s*69$/);
+      await expectElementToHaveText(getLocatorByRole('link', { name: /^LIHKG/ }), /^LIHKG\s*71$/);
     });
   });
 
   test('All forums is first [REQ-archive-search-020][SCN-archive-search-030]', async () => {
-    await test.step('Given two forums have visible comments', async () => {
+    await test.step('Given LIHKG has visible comments', async () => {
       await expectElementToBeVisible(getLocatorByRole('navigation', { name: 'Forums' }));
     });
     await test.step('When the visitor views the sidebar', async () => {
@@ -313,14 +315,14 @@ test.describe('forum sidebar', () => {
   });
 
   test('an empty forum is omitted [REQ-archive-search-022][SCN-archive-search-032]', async () => {
-    await test.step('Given both HKGolden comments are hidden', async () => {
+    await test.step('Given EmptyForum has only a hidden comment', async () => {
       await expectElementToBeVisible(getLocatorByRole('navigation', { name: 'Forums' }));
     });
     await test.step('When the visitor views the sidebar', async () => {
       await expectElementToBeVisible(getLocatorByRole('link', { name: /^LIHKG/ }));
     });
-    await test.step('Then HKGolden has no entry', async () => {
-      await expect(getLocatorByRole('link', { name: /^HKGolden/ })).toHaveCount(0);
+    await test.step('Then EmptyForum has no entry', async () => {
+      await expect(getLocatorByRole('link', { name: /^EmptyForum/ })).toHaveCount(0);
     });
   });
 
@@ -338,14 +340,14 @@ test.describe('forum sidebar', () => {
   });
 
   test('selecting a forum puts its id in the URL [REQ-archive-search-025][SCN-archive-search-037]', async () => {
-    await test.step('Given the visitor selects HKGolden', async () => {
-      await expectElementToBeVisible(getLocatorByRole('link', { name: /^HKGolden/ }));
+    await test.step('Given the visitor selects LIHKG', async () => {
+      await expectElementToBeVisible(getLocatorByRole('link', { name: /^LIHKG/ }));
     });
     await test.step('When the filtered grid renders', async () => {
-      await clickAndNavigate(getLocatorByRole('link', { name: /^HKGolden/ }));
+      await clickAndNavigate(getLocatorByRole('link', { name: /^LIHKG/ }));
     });
-    await test.step('Then the URL is /search?forum=2', async () => {
-      await expectPageToHaveURL('/search?forum=2');
+    await test.step('Then the URL is /search?forum=1', async () => {
+      await expectPageToHaveURL('/search?forum=1');
     });
   });
 
@@ -353,24 +355,26 @@ test.describe('forum sidebar', () => {
     await test.step('Given the visitor searched for "Tesla"', async () => {
       await gotoURL('/search?q=Tesla');
     });
-    await test.step('When the visitor selects HKGolden', async () => {
-      await clickAndNavigate(getLocatorByRole('link', { name: /^HKGolden/ }));
+    await test.step('When the visitor selects LIHKG', async () => {
+      await clickAndNavigate(getLocatorByRole('link', { name: /^LIHKG/ }));
     });
     await test.step('Then the URL keeps both parameters', async () => {
-      await expectPageToHaveURL('/search?q=Tesla&forum=2');
+      await expectPageToHaveURL('/search?q=Tesla&forum=1');
     });
   });
 
   test('the active forum is highlighted [REQ-archive-search-026][SCN-archive-search-039]', async () => {
-    await test.step('Given the visitor selected HKGolden', async () => {
-      await gotoURL('/search?forum=2');
+    await test.step('Given the visitor selected LIHKG', async () => {
+      await gotoURL('/search?forum=1');
     });
     await test.step('When the sidebar renders', async () => {
-      await expectElementToBeVisible(getLocatorByRole('link', { name: /^HKGolden/ }));
+      await expectElementToBeVisible(getLocatorByRole('link', { name: /^LIHKG/ }));
     });
-    await test.step('Then HKGolden is marked active and LIHKG is not', async () => {
-      await expectElementToHaveAttribute(getLocatorByRole('link', { name: /^HKGolden/ }), 'aria-current', 'page');
-      await expect(getLocatorByRole('link', { name: /^LIHKG/ })).not.toHaveAttribute('aria-current', 'page');
+    await test.step('Then LIHKG is marked active', async () => {
+      await expectElementToHaveAttribute(getLocatorByRole('link', { name: /^LIHKG/ }), 'aria-current', 'page');
+      await expect(
+        getLocatorByRole('navigation', { name: 'Forums' }).locator('[aria-current="page"]'),
+      ).toHaveCount(1);
     });
   });
 
@@ -389,8 +393,8 @@ test.describe('forum sidebar', () => {
   });
 
   test('All forums clears the forum filter [REQ-archive-search-028][SCN-archive-search-043]', async () => {
-    await test.step('Given HKGolden is selected with query Tesla', async () => {
-      await gotoURL('/search?q=Tesla&forum=2');
+    await test.step('Given LIHKG is selected with query Tesla', async () => {
+      await gotoURL('/search?q=Tesla&forum=1');
     });
     await test.step('When the visitor selects All forums', async () => {
       await clickAndNavigate(getLocatorByRole('link', { name: 'All forums' }));

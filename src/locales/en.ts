@@ -72,7 +72,6 @@ export const en = {
     intro: 'This archive collects public forum comments about stocks so they can be searched in one place.',
     sources: 'Sources',
     lihkg: 'LIHKG',
-    hkGolden: 'HKGolden',
     detection: 'How mentions are detected',
     detectionDescription:
       'Comments are matched by cashtag ($AAPL), by bare uppercase tickers (AAPL), and by alias matching for company names and nicknames such as 蘋果 for AAPL.',

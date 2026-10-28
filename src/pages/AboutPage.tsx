@@ -27,9 +27,6 @@ export function AboutPage() {
           <li>
             <a href="https://lihkg.com">{en.about.lihkg}</a>
           </li>
-          <li>
-            <a href="https://forum.hkgolden.com">{en.about.hkGolden}</a>
-          </li>
         </ul>
         <h2 className="mb-3 mt-8 text-lg font-semibold tracking-tight">{en.about.detection}</h2>
         <p className="my-3 text-secondary-foreground leading-relaxed">

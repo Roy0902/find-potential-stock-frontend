@@ -49,15 +49,15 @@ test.describe('visibility', () => {
   });
 
   test('forum counts exclude hidden and blocked [REQ-shared-003][SCN-shared-003]', async () => {
-    await test.step('Given 69 LIHKG and 2 HKGolden visible comments', async () => {
+    await test.step('Given 71 visible LIHKG comments', async () => {
       await gotoURL('/');
     });
     await test.step('When the visitor views the sidebar', async () => {
       await expectElementToBeVisible(getLocatorByRole('navigation', { name: 'Forums' }));
     });
-    await test.step('Then the counts are 69 and 2', async () => {
-      await expect(getLocatorByRole('link', { name: /^LIHKG/ })).toContainText('69');
-      await expect(getLocatorByRole('link', { name: /^HKGolden/ })).toContainText('2');
+    await test.step('Then LIHKG shows 71 and no HKGolden entry exists', async () => {
+      await expect(getLocatorByRole('link', { name: /^LIHKG/ })).toContainText('71');
+      await expect(getLocatorByRole('link', { name: /^HKGolden/ })).toHaveCount(0);
     });
   });
 
@@ -117,15 +117,15 @@ test.describe('content', () => {
   });
 
   test('source names are shown with comments [REQ-shared-006][SCN-shared-008]', async () => {
-    await test.step('Given cards from two sources', async () => {
+    await test.step('Given comments from LIHKG', async () => {
       await gotoURL('/');
     });
     await test.step('When the visitor reads the cards', async () => {
       await expectElementToBeVisible(getLocatorByText('LIHKG').first());
     });
-    await test.step('Then HKGolden cards name their source', async () => {
+    await test.step('Then the source is named on the cards', async () => {
       await search('Tesla');
-      await expectElementToBeVisible(getLocatorByText('HKGolden').first());
+      await expectElementToBeVisible(getLocatorByText('LIHKG').first());
     });
   });
 
