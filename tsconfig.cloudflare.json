@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "app",
+    "src",
+    "workers",
+    ".react-router/types/**/*",
+    "vite.cloudflare.config.ts"
+  ],
+  "compilerOptions": {
+    "types": ["vite/client", "node", "@cloudflare/workers-types"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "noEmit": true
+  }
+}

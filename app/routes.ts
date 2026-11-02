@@ -7,5 +7,7 @@ export default [
   route('about', 'routes/about.tsx'),
   route('admin/login', 'routes/admin-login.tsx'),
   route('admin', 'routes/admin.tsx'),
+  route('api/*', 'routes/api.proxy.ts'),
+  route('health', 'routes/health.ts'),
   route('*', 'routes/not-found.tsx'),
 ] satisfies RouteConfig;

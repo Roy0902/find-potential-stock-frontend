@@ -1,52 +1,43 @@
-import { PassThrough } from 'node:stream';
 import type { EntryContext } from 'react-router';
 import { ServerRouter } from 'react-router';
-import { renderToPipeableStream } from 'react-dom/server';
+import { renderToReadableStream } from 'react-dom/server.browser';
 
-export default function handleRequest(
+// Give loaders time to settle before React rejects the render.
+export const streamTimeout = 10_000;
+
+export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
 ) {
-  return new Promise<Response>((resolve, reject) => {
-    let shellRendered = false;
-    const stream = new PassThrough();
-    const body = new ReadableStream({
-      start(controller) {
-        stream.on('data', (chunk: Buffer) => controller.enqueue(new Uint8Array(chunk)));
-        stream.on('end', () => controller.close());
-        stream.on('error', (error) => controller.error(error));
-      },
-      cancel() {
-        stream.destroy();
-      },
-    });
+  let shellRendered = false;
+  const userAgent = request.headers.get('user-agent') ?? '';
 
-    const { pipe, abort } = renderToPipeableStream(
-      <ServerRouter context={routerContext} url={request.url} />,
-      {
-        onShellReady() {
-          shellRendered = true;
-          responseHeaders.set('Content-Type', 'text/html; charset=utf-8');
-          resolve(
-            new Response(body, {
-              headers: responseHeaders,
-              status: responseStatusCode,
-            }),
-          );
-          pipe(stream);
-        },
-        onShellError(error: unknown) {
-          reject(error);
-        },
-        onError(error: unknown) {
+  const body = await renderToReadableStream(
+    <ServerRouter context={routerContext} url={request.url} />,
+    {
+      signal: AbortSignal.timeout(streamTimeout + 1_000),
+      onError(error: unknown) {
+        if (shellRendered) {
+          console.error(error);
+        } else {
           responseStatusCode = 500;
-          if (shellRendered) console.error(error);
-        },
+        }
       },
-    );
+    },
+  );
+  shellRendered = true;
 
-    setTimeout(abort, 10_000);
+  // Crawlers should receive the complete document, not a partial stream.
+  if (/bot|crawler|spider|slurp|bingpreview/i.test(userAgent)) {
+    await body.allReady;
+  }
+
+  responseHeaders.set('Content-Type', 'text/html; charset=utf-8');
+
+  return new Response(body, {
+    headers: responseHeaders,
+    status: responseStatusCode,
   });
 }

@@ -7,12 +7,14 @@
     "dev": "react-router dev --port 5173",
     "build": "react-router typegen && tsc --noEmit && react-router build",
     "start": "react-router-serve ./build/server/index.js",
+    "dev:cf": "node scripts/react-router-cf.mjs dev",
+    "build:cf": "react-router typegen && tsc --noEmit -p tsconfig.cloudflare.json && node scripts/react-router-cf.mjs build",
+    "deploy:cf": "npm run build:cf && wrangler deploy",
     "test:e2e": "npm --prefix e2e test",
     "test:e2e:install": "npm --prefix e2e install",
     "test:e2e:typecheck": "npm --prefix e2e run typecheck"
   },
   "dependencies": {
-    "@react-router/dev": "^7.18.5",
     "@react-router/serve": "^7.18.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -22,6 +24,9 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.67.0",
+    "@cloudflare/workers-types": "^5.20261102.1",
+    "@react-router/dev": "^7.18.5",
     "@types/node": "^26.6.5",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -29,6 +34,7 @@
     "postcss": "^8.5.32",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
-    "vite": "^6.0.7"
+    "vite": "^6.0.7",
+    "wrangler": "^4.156.1"
   }
 }

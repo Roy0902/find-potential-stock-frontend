@@ -33,15 +33,21 @@ If the backend is not running, pages load but show "Something went wrong." with 
 | `npm run dev` | SSR development server on 5173 with `/api` proxied to `http://localhost:3000` |
 | `npm run build` | Generate route types, type check, and build the SSR server/client bundles |
 | `npm run start` | Run the built SSR server |
+| `npm run dev:cf` | Run the app in the Cloudflare Workers runtime |
+| `npm run build:cf` | Build the Cloudflare Workers bundle into `build-cloudflare/` |
+| `npm run deploy:cf` | Build and deploy the Worker with Wrangler |
 
 ## Environment
 
 | Variable | Default | Purpose |
 | :-- | :-- | :-- |
-| `VITE_API_URL` | empty | API base URL. Empty means same-origin `/api`, which the dev server proxies. Set it when the API is on another host. |
-| `API_PROXY_TARGET` | `http://localhost:3000` in development | Backend URL used by SSR loaders. Set this in the SSR runtime environment when the API is not reachable at that address. |
+| `VITE_API_URL` | empty | Build-time browser API base. Leave empty so the browser calls same-origin `/api`. |
+| `API_PROXY_TARGET` | unset; SSR loaders fall back to `http://localhost:3000` | Runtime backend URL used by SSR loaders and the `/api` proxy. The `/api` proxy returns `503` until it is set. |
+| `PORT` | `3000` for `start`, `5173` for `dev` | Listen port. The Docker image sets `8080`. |
 
-The dev proxy target is `http://localhost:3000` in `vite.config.ts`.
+`/api/*` is handled by `app/routes/api.proxy.ts` in production, so the SSR server proxies
+browser requests to `API_PROXY_TARGET` itself. The Vite dev server still proxies `/api` to
+`http://localhost:3000` for convenience.
 
 ## Routes
 
@@ -53,6 +59,7 @@ The dev proxy target is `http://localhost:3000` in `vite.config.ts`.
 | `/about` | Sources, detection explanation, disclaimer |
 | `/admin/login` | Owner sign in |
 | `/admin` | Search, hide/unhide, delete, block/unblock, blocked list, action log, collection status |
+| `/health` | Liveness probe used by the Docker health check |
 | `*` | "Page not found" |
 
 ## Project structure
@@ -62,8 +69,11 @@ app/
   root.tsx                SSR document and shared layout
   routes.ts               route table
   entry.client.tsx        browser hydration entry
-  entry.server.tsx        server rendering entry
+  entry.server.tsx        Web Streams server rendering entry (Node + Workers)
   routes/                 route loaders and page adapters
+  routes/api.proxy.ts     same-origin /api reverse proxy
+workers/
+  app.ts                  Cloudflare Worker entry
 src/
   api/
     client.ts             fetch wrapper, ApiError, envelope unwrapping
@@ -144,12 +154,55 @@ The Playwright config starts the backend (`../../find-potential-stock-backend`),
 proxy and this dev server unless `START_WEB_SERVER=0`. `URL` overrides the base URL. See
 [`e2e/README.md`](e2e/README.md) for environment variables and the verified follow-up suite.
 
-## Deployment
+## Docker
 
-`npm run build` produces client assets and an SSR server bundle. Run `npm run start` on a Node.js
-host; set `PORT` when the default server port conflicts with the backend (for example, in
-PowerShell use `$env:PORT = "5173"` before starting). Production deployments must route browser `/api`
-requests to the backend with a same-origin
-reverse proxy, and set `API_PROXY_TARGET` in the SSR runtime so server loaders can reach the backend.
-Admin loaders forward only the incoming session cookie to the backend; do not forward it to other
-origins.
+The image is built on `node:22-bookworm-slim` (Debian 12 LTS) and runs as a non-root user on port
+`8080`. It does not bake in a backend URL; pass `API_PROXY_TARGET` when the container starts.
+
+```bash
+docker build -t find-potential-stock-frontend .
+
+docker run --rm -p 8080:8080 \
+  -e API_PROXY_TARGET=https://api.example.com \
+  find-potential-stock-frontend
+```
+
+The browser calls same-origin `/api`; the container proxies those requests to
+`API_PROXY_TARGET`, and React Router loaders use the same value server-side. The image health check
+calls `/health`, which does not depend on the backend. Docker is not required to run the app on a
+Node host: `npm run build && npm start` works the same way.
+
+## Cloudflare Workers
+
+Cloudflare Pages does not run Docker images. This project targets Cloudflare Workers with static
+assets, which is the current Cloudflare React Router deployment path.
+
+```bash
+# Local: point at a backend reachable from your machine.
+cp .dev.vars.example .dev.vars
+npm run dev:cf
+
+# Production: deploy once, then store the backend URL as a Worker secret.
+npm run deploy:cf
+npx wrangler secret put API_PROXY_TARGET
+```
+
+Until the secret is set, `/api` returns `503` because no target is configured.
+
+`API_PROXY_TARGET` must be a publicly reachable HTTPS URL. A Worker cannot reach a private Docker
+container directly; expose the backend through a public hostname or a Cloudflare Tunnel.
+
+The Worker entry is `workers/app.ts`, and its configuration is `wrangler.jsonc`. The Cloudflare
+build uses `vite.cloudflare.config.ts` and writes the deployable Worker to `build-cloudflare/server/`,
+keeping it separate from the Node/Docker `build/` output.
+
+## Production notes
+
+- `/api/*` is proxied by the app (`app/routes/api.proxy.ts`) in both Docker and Workers, so the
+  browser stays same-origin and does not need CORS.
+- Admin requests still forward the browser's `Origin` header to the backend. Set the backend's
+  `CORS_ORIGIN` to the frontend's public origin, or accept same-origin proxied requests there.
+- Admin loaders forward only the incoming session cookie to the backend; do not forward it to other
+  origins.
+- Set `PORT` when the Node server port conflicts with another process (for example, in PowerShell
+  use `$env:PORT = "5173"` before `npm start`).
